@@ -48,7 +48,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     <MapContainer
       center={[50, 50]}
       zoom={1}
-      style={{ height: '600px', width: '100%' }}
+      style={{ height: '100%', width: '100%' }}
       crs={L.CRS.Simple}
       minZoom={1}
       maxZoom={3}
@@ -59,7 +59,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       attributionControl={false}
     >
       <ImageOverlay
-        url="https://i.imgur.com/L15kvGU.jpeg"
+        url="https://i.imgur.com/ZEKHRbd.jpeg"
         bounds={imageBounds as L.LatLngBoundsExpression}
       />
       {zones.map((zone) => (
