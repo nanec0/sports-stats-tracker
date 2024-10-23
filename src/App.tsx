@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import './App.css';
+import InteractiveMap from './components/InteractiveMap';
 import DataEntryPanel from "./components/DataEntryPanel";
 import TeamManagement from "./components/TeamManagement";
 import RealTimeTable from "./components/RealTimeTable";
@@ -89,18 +90,40 @@ const App = () => {
         return <PreMatchConfig teams={teams} handleStartMatch={handleMatchStart} />;
       case "dataEntryPanel":
         return (
-          <DataEntryPanel 
-            addPlay={addPlay}
-            selectedZone={selectedZone}
-            setSelectedZone={setSelectedZone}
-            isMobile={isMobile}
-            activeTeam={activeTeam}
-            teamColor={activeTeam === homeTeam ? homeColor : ""}
-            onTeamSwitch={switchTeam}
-          />
+          <div className="flex flex-col md:flex-row h-screen">
+            <div className="w-full md:w-1/2 p-4">
+              <InteractiveMap
+                selectedZone={selectedZone}
+                setSelectedZone={setSelectedZone}
+                activeTeam={activeTeam === homeTeam ? 'home' : 'away'} />
+            </div>
+            <div className="w-full md:w-1/2 p-4">
+              <DataEntryPanel
+                addPlay={addPlay}
+                selectedZone={selectedZone}
+                setSelectedZone={setSelectedZone}
+                isMobile={isMobile}
+                activeTeam={activeTeam}
+                teamColor={activeTeam === homeTeam ? homeColor : ""}
+                onTeamSwitch={switchTeam} />
+                {homeTeam && awayTeam && (
+                  <RealTimeTable homeTeam={homeTeam} awayTeam={awayTeam} plays={plays} homeColor={homeColor} awayColor={awayColor} />
+                )}
+            </div>            
+          </div>
         );
       case "realTimeTable":
-        return <RealTimeTable />;
+        return (
+          homeTeam && awayTeam ? (
+            <RealTimeTable
+              plays={plays}
+              homeTeam={homeTeam}
+              awayTeam={awayTeam}
+              homeColor={homeColor}
+              awayColor={awayColor}
+            />
+          ) : null
+        );
       default:
         return null;
     }
