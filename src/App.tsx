@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import './App.css';
+import InteractiveMap from './components/InteractiveMap';
 import DataEntryPanel from "./components/DataEntryPanel";
 import TeamManagement from "./components/TeamManagement";
 import RealTimeTable from "./components/RealTimeTable";
@@ -89,15 +90,17 @@ const App = () => {
         return <PreMatchConfig teams={teams} handleStartMatch={handleMatchStart} />;
       case "dataEntryPanel":
         return (
-          <DataEntryPanel 
-            addPlay={addPlay}
+          <><InteractiveMap
             selectedZone={selectedZone}
             setSelectedZone={setSelectedZone}
-            isMobile={isMobile}
-            activeTeam={activeTeam}
-            teamColor={activeTeam === homeTeam ? homeColor : ""}
-            onTeamSwitch={switchTeam}
-          />
+            activeTeam={activeTeam === homeTeam ? 'home' : 'away'} /><DataEntryPanel
+              addPlay={addPlay}
+              selectedZone={selectedZone}
+              setSelectedZone={setSelectedZone}
+              isMobile={isMobile}
+              activeTeam={activeTeam}
+              teamColor={activeTeam === homeTeam ? homeColor : ""}
+              onTeamSwitch={switchTeam} /></>
         );
       case "realTimeTable":
         return <RealTimeTable />;
