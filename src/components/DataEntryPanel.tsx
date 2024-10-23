@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Player, DataEntryPanelProps, Team } from '../types';
+import { Play, Player, DataEntryPanelProps } from '../types';
 
 const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
   addPlay,
