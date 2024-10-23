@@ -106,11 +106,24 @@ const App = () => {
                 activeTeam={activeTeam}
                 teamColor={activeTeam === homeTeam ? homeColor : ""}
                 onTeamSwitch={switchTeam} />
+                {homeTeam && awayTeam && (
+                  <RealTimeTable homeTeam={homeTeam} awayTeam={awayTeam} plays={plays} homeColor={homeColor} awayColor={awayColor} />
+                )}
             </div>            
           </div>
         );
       case "realTimeTable":
-        return <RealTimeTable />;
+        return (
+          homeTeam && awayTeam ? (
+            <RealTimeTable
+              plays={plays}
+              homeTeam={homeTeam}
+              awayTeam={awayTeam}
+              homeColor={homeColor}
+              awayColor={awayColor}
+            />
+          ) : null
+        );
       default:
         return null;
     }
