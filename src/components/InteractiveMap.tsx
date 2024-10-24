@@ -45,49 +45,57 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   });
 
   return (
-    <MapContainer
-      center={[50, 50]}
-      zoom={1}
-      style={{ height: '100%', width: '100%' }}
-      crs={L.CRS.Simple}
-      minZoom={1}
-      maxZoom={3}
-      zoomControl={false}
-      dragging={false}
-      doubleClickZoom={false}
-      scrollWheelZoom={false}
-      attributionControl={false}
-    >
-      <ImageOverlay
-        url="https://i.imgur.com/ZEKHRbd.jpeg"
-        bounds={imageBounds as L.LatLngBoundsExpression}
-      />
-      {zones.map((zone) => (
-        <Rectangle
-          key={zone.id}
-          bounds={zone.bounds as L.LatLngBoundsExpression}
-          pathOptions={{
-            color: selectedZone === zone.id ? 'red' : 'blue',
-            fillColor: hoveredZone === zone.id ? 'rgba(255, 255, 0, 0.3)' : 'transparent',
-            fillOpacity: 0.5,
-            weight: 2,
-          }}
-          eventHandlers={{
-            click: () => setSelectedZone(zone.id),
-            mouseover: () => setHoveredZone(zone.id),
-            mouseout: () => setHoveredZone(null),
-          }}
+    <div className="relative w-full h-[600px] bg-white rounded-lg shadow-lg overflow-hidden">
+      <MapContainer
+        center={[50, 50]}
+        zoom={1}
+        style={{ height: '100%', width: '100%' }}
+        crs={L.CRS.Simple}
+        minZoom={1}
+        maxZoom={3}
+        zoomControl={false}
+        dragging={false}
+        doubleClickZoom={false}
+        scrollWheelZoom={false}
+        attributionControl={false}
+        className="z-0"
+      >
+        <ImageOverlay
+          url="https://i.imgur.com/ZEKHRbd.jpeg"
+          bounds={imageBounds as L.LatLngBoundsExpression}
         />
-      ))}
-      <Marker
-        position={activeTeam === 'home' ? [12.5, 50] : [87.5, 50]}
-        icon={goalIcon}
-      />
-      <Marker
-        position={activeTeam === 'home' ? [87.5, 50] : [12.5, 50]}
-        icon={arrowIcon}
-      />
-    </MapContainer>
+        {zones.map((zone) => (
+          <Rectangle
+            key={zone.id}
+            bounds={zone.bounds as L.LatLngBoundsExpression}
+            pathOptions={{
+              color: selectedZone === zone.id ? '#EF4444' : '#3B82F6',
+              fillColor: hoveredZone === zone.id ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
+              fillOpacity: 0.5,
+              weight: 2,
+            }}
+            eventHandlers={{
+              click: () => setSelectedZone(zone.id),
+              mouseover: () => setHoveredZone(zone.id),
+              mouseout: () => setHoveredZone(null),
+            }}
+          />
+        ))}
+        <Marker
+          position={activeTeam === 'home' ? [12.5, 50] : [87.5, 50]}
+          icon={goalIcon}
+        />
+        <Marker
+          position={activeTeam === 'home' ? [87.5, 50] : [12.5, 50]}
+          icon={arrowIcon}
+        />
+      </MapContainer>
+      <div className="absolute bottom-4 right-4 bg-white px-3 py-2 rounded-md shadow-md text-sm">
+        <p className="font-medium text-gray-700">
+          Selected Zone: {selectedZone || 'None'}
+        </p>
+      </div>
+    </div>
   );
 };
 
