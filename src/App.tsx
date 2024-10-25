@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import './App.css';
 import InteractiveMap from './components/InteractiveMap';
 import DataEntryPanel from "./components/DataEntryPanel";
-import TeamManagement from "./components/TeamManagement";
 import RealTimeTable from "./components/RealTimeTable";
 import TournamentManagement from "./components/TournamentManagement";
 import PreMatchConfig from './components/PreMatchConfig';
@@ -23,30 +22,6 @@ const useWindowSize = () => {
   return isMobile;
 };
 
-const useLocalStorage = <T,>(key: string, initialValue: T) => {
-  const [storedValue, setStoredValue] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.error(error);
-      return initialValue;
-    }
-  });
-
-  const setValue = (value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  return [storedValue, setValue];
-};
-
 const App = () => {
   const [activeComponent, setActiveComponent] = useState("tournamentManagement");
   const [plays, setPlays] = useState<Play[]>([]);
@@ -56,8 +31,6 @@ const App = () => {
   const [awayTeam, setAwayTeam] = useState<Team | null>(null);
   const [homeColor, setHomeColor] = useState<string>('#8884d8');
   const [awayColor, setAwayColor] = useState<string>('#82ca9d');
-  const [teams, setTeams] = useLocalStorage('teams', []);
-  const [tournaments, setTournaments] = useState<Tournament[]>([]);
 
   const isMobile = useWindowSize();
 
@@ -78,16 +51,15 @@ const App = () => {
     setHomeTeam(home);
     setAwayTeam(away);
     setActiveTeam(home);
+    setActiveComponent("dataEntryPanel");
   };
 
   const renderComponent = useMemo(() => {
     switch (activeComponent) {
       case "tournamentManagement":
         return <TournamentManagement />;
-      case "teamManagement":
-        return <TeamManagement teams={teams} setTeams={setTeams} />;
       case "preMatchConfig":
-        return <PreMatchConfig teams={teams} handleStartMatch={handleMatchStart} />;
+        return <PreMatchConfig onStartMatch={handleMatchStart} />;
       case "dataEntryPanel":
         return (
           <div className="flex flex-col md:flex-row h-screen">
@@ -104,12 +76,18 @@ const App = () => {
                 setSelectedZone={setSelectedZone}
                 isMobile={isMobile}
                 activeTeam={activeTeam}
-                teamColor={activeTeam === homeTeam ? homeColor : ""}
+                teamColor={activeTeam === homeTeam ? homeColor : awayColor}
                 onTeamSwitch={switchTeam} />
-                {homeTeam && awayTeam && (
-                  <RealTimeTable homeTeam={homeTeam} awayTeam={awayTeam} plays={plays} homeColor={homeColor} awayColor={awayColor} />
-                )}
-            </div>            
+              {homeTeam && awayTeam && (
+                <RealTimeTable
+                  homeTeam={homeTeam}
+                  awayTeam={awayTeam}
+                  plays={plays}
+                  homeColor={homeColor}
+                  awayColor={awayColor}
+                />
+              )}
+            </div>
           </div>
         );
       case "realTimeTable":
@@ -127,7 +105,7 @@ const App = () => {
       default:
         return null;
     }
-  }, [activeComponent, teams, setTeams, handleMatchStart, addPlay, selectedZone, isMobile, activeTeam, homeColor, switchTeam]);
+  }, [activeComponent, handleMatchStart, addPlay, selectedZone, isMobile, activeTeam, homeColor, awayColor, switchTeam, plays, homeTeam, awayTeam]);
 
   return (
     <div className="container mx-auto p-4">
@@ -135,27 +113,21 @@ const App = () => {
       <div className="mb-4">
         <button
           onClick={() => setActiveComponent("tournamentManagement")}
-          className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
+          className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 mr-2"
         >
           Tournament Management
-        </button>
-        <button
-          onClick={() => setActiveComponent("teamManagement")}
-          className="bg-blue-500 text-white p-2 rounded mr-2 hover:bg-blue-600"
-        >
-          Team Management
         </button>
         <button
           onClick={() => setActiveComponent("preMatchConfig")}
           className="bg-blue-500 text-white p-2 rounded mr-2 hover:bg-blue-600"
         >
-          PreMatchConfig
+          Comenzar Partido
         </button>
         <button
           onClick={() => setActiveComponent("dataEntryPanel")}
           className="bg-green-500 text-white p-2 rounded mr-2 hover:bg-green-600"
         >
-          Data Entry Panel
+          Datos del Partido
         </button>
         <button
           onClick={() => setActiveComponent("realTimeTable")}
