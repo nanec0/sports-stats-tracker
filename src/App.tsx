@@ -5,7 +5,7 @@ import DataEntryPanel from "./components/DataEntryPanel";
 import RealTimeTable from "./components/RealTimeTable";
 import TournamentManagement from "./components/TournamentManagement";
 import PreMatchConfig from './components/PreMatchConfig';
-import { Play, Team, Tournament } from './types';
+import { Play, Team } from './types';
 
 const useWindowSize = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -109,7 +109,7 @@ const App = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Sports Stats Tracker</h1>
+      <h1 className="text-2xl font-bold mb-4">Play Data</h1>
       <div className="mb-4">
         <button
           onClick={() => setActiveComponent("tournamentManagement")}
