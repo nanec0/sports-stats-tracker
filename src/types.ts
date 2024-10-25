@@ -46,6 +46,5 @@ export interface DataEntryPanelProps {
   setSelectedZone: (zone: string) => void;
   isMobile: boolean;
   activeTeam: Team | null;
-  teamColor: string;
   onTeamSwitch: () => void;
 }

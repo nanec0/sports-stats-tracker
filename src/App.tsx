@@ -29,8 +29,6 @@ const App = () => {
   const [activeTeam, setActiveTeam] = useState<Team | null>(null);
   const [homeTeam, setHomeTeam] = useState<Team | null>(null);
   const [awayTeam, setAwayTeam] = useState<Team | null>(null);
-  const [homeColor] = useState<string>('#8884d8');
-  const [awayColor] = useState<string>('#82ca9d');
 
   const isMobile = useWindowSize();
 
@@ -76,15 +74,12 @@ const App = () => {
                 setSelectedZone={setSelectedZone}
                 isMobile={isMobile}
                 activeTeam={activeTeam}
-                teamColor={activeTeam === homeTeam ? homeColor : awayColor}
                 onTeamSwitch={switchTeam} />
               {homeTeam && awayTeam && (
                 <RealTimeTable
                   homeTeam={homeTeam}
                   awayTeam={awayTeam}
                   plays={plays}
-                  homeColor={homeColor}
-                  awayColor={awayColor}
                 />
               )}
             </div>
@@ -97,15 +92,13 @@ const App = () => {
               plays={plays}
               homeTeam={homeTeam}
               awayTeam={awayTeam}
-              homeColor={homeColor}
-              awayColor={awayColor}
             />
           ) : null
         );
       default:
         return null;
     }
-  }, [activeComponent, handleMatchStart, addPlay, selectedZone, isMobile, activeTeam, homeColor, awayColor, switchTeam, plays, homeTeam, awayTeam]);
+  }, [activeComponent, handleMatchStart, addPlay, selectedZone, isMobile, activeTeam, switchTeam, plays, homeTeam, awayTeam]);
 
   return (
     <div className="container mx-auto p-4">

@@ -5,16 +5,12 @@ interface RealTimeTableProps {
   plays: Play[];
   homeTeam: Team;
   awayTeam: Team;
-  homeColor: string;
-  awayColor: string;
 }
 
 const RealTimeTable: React.FC<RealTimeTableProps> = ({
   plays,
   homeTeam,
   awayTeam,
-  homeColor,
-  awayColor
 }) => {
   const columns = [
     { key: 'team', label: 'Team' },
@@ -34,14 +30,14 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
           <div className="flex items-center">
             <div
               className="w-4 h-4 rounded-full mr-2"
-              style={{ backgroundColor: homeColor }}
+              style={{ backgroundColor: homeTeam.color }}
             ></div>
             <span className="font-medium">{homeTeam.name}</span>
           </div>
           <div className="flex items-center">
             <div
               className="w-4 h-4 rounded-full mr-2"
-              style={{ backgroundColor: awayColor }}
+              style={{ backgroundColor: awayTeam.color }}
             ></div>
             <span className="font-medium">{awayTeam.name}</span>
           </div>
@@ -80,7 +76,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
                     <td
                       className="px-6 py-4 whitespace-nowrap font-medium"
                       style={{
-                        color: play.teamId === homeTeam.id ? homeColor : awayColor
+                        color: play.teamId === homeTeam.id ? homeTeam.color : awayTeam.color
                       }}
                     >
                       {play.teamId === homeTeam.id ? homeTeam.name : awayTeam.name}

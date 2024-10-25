@@ -7,7 +7,6 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
   setSelectedZone,
   isMobile,
   activeTeam,
-  teamColor,
   onTeamSwitch,
 }) => {
   const [chico, setChico] = useState('');
@@ -115,7 +114,7 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg" style={{ backgroundColor: `${teamColor}20` }}>
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg" style={{ backgroundColor: `${activeTeam?.color}` }}>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-800">
           Data Entry - {activeTeam ? activeTeam.name : 'No Team Selected'}
