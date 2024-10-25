@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { MapContainer, ImageOverlay, Rectangle, Marker } from 'react-leaflet';
-import { Icon } from 'leaflet';
+import { MapContainer, ImageOverlay, Rectangle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -13,7 +12,6 @@ interface InteractiveMapProps {
 const InteractiveMap: React.FC<InteractiveMapProps> = ({
   selectedZone,
   setSelectedZone,
-  activeTeam,
 }) => {
   const [hoveredZone, setHoveredZone] = useState<string | null>(null);
 
@@ -33,16 +31,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   ];
 
   const imageBounds: [number, number][] = [[0, 0], [100, 100]];
-
-  const goalIcon = new Icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/53/53283.png',
-    iconSize: [30, 30],
-  });
-
-  const arrowIcon = new Icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3031/3031693.png',
-    iconSize: [30, 30],
-  });
 
   return (
     <div className="relative w-full h-[600px] bg-white rounded-lg shadow-lg overflow-hidden">
@@ -81,14 +69,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             }}
           />
         ))}
-        <Marker
-          position={activeTeam === 'home' ? [12.5, 50] : [87.5, 50]}
-          icon={goalIcon}
-        />
-        <Marker
-          position={activeTeam === 'home' ? [87.5, 50] : [12.5, 50]}
-          icon={arrowIcon}
-        />
       </MapContainer>
       <div className="absolute bottom-4 right-4 bg-white px-3 py-2 rounded-md shadow-md text-sm">
         <p className="font-medium text-gray-700">
