@@ -1,21 +1,20 @@
 import React, { useState, useCallback } from "react";
-import { Team, Player } from "../types";
+import { Team, Player, Tournament } from "../types";
 
 interface TeamManagementProps {
-  teams: Team[];
-  setTeams: React.Dispatch<React.SetStateAction<Team[]>>;
+  tournament: Tournament;
+  onTeamsUpdate: (teams: Team[]) => void;
 }
 
-const TeamManagement: React.FC<TeamManagementProps> = ({ teams, setTeams }) => {
+const TeamManagement: React.FC<TeamManagementProps> = ({ tournament, onTeamsUpdate }) => {
   const [newTeamName, setNewTeamName] = useState("");
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [newPlayerNumber, setNewPlayerNumber] = useState("");
   const [newPlayerPosition, setNewPlayerPosition] = useState("");
   const [newTeamColor, setNewTeamColor] = useState('#000000');
-  const [isEditingTeam, setIsEditingTeam] = useState<Team | null>(null);
-  const [editedTeamName, setEditedTeamName] = useState('');
-  const [editedTeamColor, setEditedTeamColor] = useState('');
+
+  const teams = tournament.teams || [];
 
   const addTeam = useCallback(() => {
     if (newTeamName.trim()) {
@@ -24,11 +23,13 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ teams, setTeams }) => {
         name: newTeamName.trim(),
         color: newTeamColor,
         players: [],
+        tournamentId: tournament.id
       };
-      setTeams((prevTeams) => [...prevTeams, newTeam]);
+      onTeamsUpdate([...teams, newTeam]);
       setNewTeamName("");
+      setNewTeamColor('#000000');
     }
-  }, [newTeamName, newTeamColor, setTeams]);
+  }, [newTeamName, newTeamColor, teams, tournament.id, onTeamsUpdate]);
 
   const addPlayer = useCallback(() => {
     if (selectedTeam && newPlayerName.trim() && newPlayerNumber.trim()) {
@@ -39,16 +40,22 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ teams, setTeams }) => {
         position: newPlayerPosition.trim(),
         teamId: selectedTeam.id
       };
+      
       const updatedTeam = {
         ...selectedTeam,
         players: [...selectedTeam.players, newPlayer]
       };
-      setTeams((prevTeams) => prevTeams.map(team => team.id === selectedTeam.id ? updatedTeam : team));
+      
+      onTeamsUpdate(teams.map(team => 
+        team.id === selectedTeam.id ? updatedTeam : team
+      ));
+      
+      setSelectedTeam(updatedTeam);
       setNewPlayerName("");
       setNewPlayerNumber("");
       setNewPlayerPosition("");
     }
-  }, [selectedTeam, newPlayerName, newPlayerNumber, newPlayerPosition, setTeams]);
+  }, [selectedTeam, newPlayerName, newPlayerNumber, newPlayerPosition, teams, onTeamsUpdate]);
 
   const removePlayer = useCallback((playerId: number) => {
     if (selectedTeam) {
@@ -56,42 +63,24 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ teams, setTeams }) => {
         ...selectedTeam,
         players: selectedTeam.players.filter(player => player.id !== playerId)
       };
-      setTeams((prevTeams) => prevTeams.map(team => team.id === selectedTeam.id ? updatedTeam : team));
+      
+      onTeamsUpdate(teams.map(team => 
+        team.id === selectedTeam.id ? updatedTeam : team
+      ));
+      
       setSelectedTeam(updatedTeam);
     }
-  }, [selectedTeam, setTeams]);
+  }, [selectedTeam, teams, onTeamsUpdate]);
 
   const removeTeam = useCallback((teamId: number) => {
-    setTeams((prevTeams) => prevTeams.filter(team => team.id !== teamId));
+    onTeamsUpdate(teams.filter(team => team.id !== teamId));
     if (selectedTeam?.id === teamId) {
       setSelectedTeam(null);
     }
-  }, [setTeams, selectedTeam]);
-
-  const startEditingTeam = useCallback((team: Team) => {
-    setIsEditingTeam(team);
-    setEditedTeamName(team.name);
-    setEditedTeamColor(team.color);
-  }, []);
-
-  const saveEditedTeam = useCallback(() => {
-    if (isEditingTeam && editedTeamName.trim() && editedTeamColor) {
-      const updatedTeam = {
-        ...isEditingTeam,
-        name: editedTeamName.trim(),
-        color: editedTeamColor,
-      };
-      setTeams((prevTeams) =>
-        prevTeams.map((team) => (team.id === isEditingTeam.id ? updatedTeam : team))
-      );
-      setIsEditingTeam(null);
-      setEditedTeamName('');
-      setEditedTeamColor('');
-    }
-  }, [isEditingTeam, editedTeamName, editedTeamColor, setTeams]);
+  }, [teams, selectedTeam, onTeamsUpdate]);
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Teams Management Section */}
         <div className="bg-white rounded-lg shadow-lg p-6">
@@ -109,14 +98,14 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ teams, setTeams }) => {
                 onChange={(e) => setNewTeamName(e.target.value)}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter team name"
-                />
-                <label className="block text-sm font-medium text-gray-700 mb-2 mt-4">Team Color</label>
-                <input
-                  type="color"
-                  value={newTeamColor}
-                  onChange={(e) => setNewTeamColor(e.target.value)}
-                  className="p-2 border rounded w-full"
-                />
+              />
+              <input
+                type="color"
+                value={newTeamColor}
+                onChange={(e) => setNewTeamColor(e.target.value)}
+                className="p-1 border rounded"
+                title="Team Color"
+              />
               <button
                 onClick={addTeam}
                 disabled={!newTeamName.trim()}
