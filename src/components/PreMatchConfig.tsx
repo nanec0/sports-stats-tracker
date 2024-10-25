@@ -3,7 +3,7 @@ import { Team } from '../types';
 
 interface PreMatchConfigProps {
   teams: Team[];
-  handleStartMatch: (home: Team, away: Team) => void;
+  handleStartMatch: (homeTeam: Team, awayTeam: Team) => void;
 }
 
 const PreMatchConfig: React.FC<PreMatchConfigProps> = ({ teams, handleStartMatch }) => {
@@ -19,6 +19,12 @@ const PreMatchConfig: React.FC<PreMatchConfigProps> = ({ teams, handleStartMatch
     const team = teams.find(team => team.id === Number(e.target.value)) || null;
     setAwayTeam(team);
   }, [teams]);
+
+  const startMatch = useCallback(() => {
+    if (homeTeam && awayTeam) {
+      handleStartMatch(homeTeam, awayTeam);
+    }
+  }, [homeTeam, awayTeam, handleStartMatch]);
 
   return (
     <div className="bg-white p-4 rounded shadow">
@@ -50,7 +56,7 @@ const PreMatchConfig: React.FC<PreMatchConfigProps> = ({ teams, handleStartMatch
         </select>
       </div>
       <button
-        onClick={() => handleStartMatch(homeTeam!, awayTeam!)}
+        onClick={startMatch}
         disabled={!homeTeam || !awayTeam}
         className="p-2 bg-blue-500 text-white rounded disabled:opacity-50"
       >
