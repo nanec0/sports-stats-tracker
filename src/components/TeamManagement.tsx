@@ -26,9 +26,7 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ teams, setTeams }) => {
         players: [],
       };
       setTeams((prevTeams) => [...prevTeams, newTeam]);
-      setNewTeamName('');
-      setNewTeamColor('#000000');
-    }
+      setNewTeamName("");
   }, [newTeamName, newTeamColor, setTeams]);
 
   const addPlayer = useCallback(() => {
