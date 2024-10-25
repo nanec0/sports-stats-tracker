@@ -29,8 +29,8 @@ const App = () => {
   const [activeTeam, setActiveTeam] = useState<Team | null>(null);
   const [homeTeam, setHomeTeam] = useState<Team | null>(null);
   const [awayTeam, setAwayTeam] = useState<Team | null>(null);
-  const [homeColor, setHomeColor] = useState<string>('#8884d8');
-  const [awayColor, setAwayColor] = useState<string>('#82ca9d');
+  const [homeColor] = useState<string>('#8884d8');
+  const [awayColor] = useState<string>('#82ca9d');
 
   const isMobile = useWindowSize();
 

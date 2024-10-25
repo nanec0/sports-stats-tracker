@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && ./node_modules/.bin/vite build",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "./node_modules/.bin/vite preview"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.14",
