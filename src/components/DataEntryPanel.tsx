@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Player, DataEntryPanelProps } from '../types';
+import { Play, Player, DataEntryPanelProps, TipoDeJuego, TipoDeResultado } from '../types';
 
 const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
   addPlay,
@@ -12,8 +12,8 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
 }) => {
   const [chico, setChico] = useState('');
   const [jugador, setJugador] = useState('');
-  const [tipoDeJuego, setTipoDeJuego] = useState<'abierto' | 'parado'>('abierto');
-  const [resultado, setResultado] = useState<'gol' | 'atajado' | 'desviado' | 'bloqueado'>('gol');
+  const [tipoDeJuego, setTipoDeJuego] = useState<TipoDeJuego>(() => 'abierto' as TipoDeJuego);
+  const [resultado, setResultado] = useState<TipoDeResultado>(() => 'gol' as TipoDeResultado);
   const [minutes, setMinutes] = useState<number | ''>('');
   const [showWarning, setShowWarning] = useState(false);
 
@@ -48,9 +48,9 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
   const resetForm = () => {
     setChico('');
     setJugador('');
-    setTipoDeJuego('abierto');
-    setResultado('gol');
-    setSelectedZone('');
+    setTipoDeJuego('abierto' as TipoDeJuego);
+    setResultado('gol' as TipoDeResultado);
+    // setSelectedZone('');
     setShowWarning(false);
     setMinutes('');
   };
@@ -91,7 +91,7 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
       label: 'Tipo de juego',
       type: 'select',
       value: tipoDeJuego,
-      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setTipoDeJuego(e.target.value as 'abierto' | 'parado'),
+      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setTipoDeJuego(e.target.value as TipoDeJuego),
       options: [
         { value: 'abierto', label: 'Abierto' },
         { value: 'parado', label: 'Parado' },
@@ -103,7 +103,7 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
       label: 'Resultado',
       type: 'select',
       value: resultado,
-      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setResultado(e.target.value as 'gol' | 'atajado' | 'desviado' | 'bloqueado'),
+      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setResultado(e.target.value as TipoDeResultado),
       options: [
         { value: 'gol', label: 'Gol' },
         { value: 'atajado', label: 'Atajado' },
