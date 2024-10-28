@@ -35,9 +35,25 @@ export interface Play {
   teamId: number;
   chico: string;
   jugador: string;
-  tipoDeJuego: 'abierto' | 'parado';
-  resultado: 'gol' | 'atajado' | 'desviado' | 'bloqueado';
+  tipoDeJuego: TipoDeJuego;
+  resultado: TipoDeResultado;
   zona: string;
+}
+
+export enum TipoDeJuego {
+  Abierto = 'abierto',
+  Parado = 'parado',
+  TiroLibre = 'tiro libre',
+  Penal = 'penal',
+  Corner = 'corner'
+}
+
+export enum TipoDeResultado {
+  Gol = 'gol',
+  Atajado = 'atajado',
+  Desviado = 'desviado',
+  Bloqueado = 'bloqueado',
+  Palo = 'palo'
 }
 
 export interface DataEntryPanelProps {
