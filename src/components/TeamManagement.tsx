@@ -84,11 +84,11 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ tournament, onTeamsUpda
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Teams Management Section */}
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Teams</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Equipos</h2>
           
           <div className="mb-6">
             <label htmlFor="teamName" className="block text-sm font-medium text-gray-700 mb-1">
-              New Team Name
+              Nombre de quipo
             </label>
             <div className="flex gap-2">
               <input
@@ -111,7 +111,7 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ tournament, onTeamsUpda
                 disabled={!newTeamName.trim()}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Add
+                Agregar
               </button>
             </div>
           </div>
@@ -155,13 +155,13 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ tournament, onTeamsUpda
         {selectedTeam && (
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">
-              Players - {selectedTeam.name}
+              Jugadores - {selectedTeam.name}
             </h2>
             
             <div className="space-y-4 mb-6">
               <div>
                 <label htmlFor="playerName" className="block text-sm font-medium text-gray-700 mb-1">
-                  Player Name
+                  Nombre del jugador
                 </label>
                 <input
                   id="playerName"
@@ -175,7 +175,7 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ tournament, onTeamsUpda
               
               <div>
                 <label htmlFor="playerNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                  Jersey Number
+                  Número de camiseta
                 </label>
                 <input
                   id="playerNumber"
@@ -189,7 +189,7 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ tournament, onTeamsUpda
               
               <div>
                 <label htmlFor="playerPosition" className="block text-sm font-medium text-gray-700 mb-1">
-                  Position
+                  Posición
                 </label>
                 <input
                   id="playerPosition"
@@ -206,7 +206,7 @@ const TeamManagement: React.FC<TeamManagementProps> = ({ tournament, onTeamsUpda
                 disabled={!newPlayerName.trim() || !newPlayerNumber.trim()}
                 className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Add Player
+                Agregar jugador
               </button>
             </div>
 

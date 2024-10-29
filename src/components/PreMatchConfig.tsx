@@ -33,17 +33,17 @@ const PreMatchConfig: React.FC<PreMatchConfigProps> = ({ onStartMatch }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Pre-Match Configuration</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Comenzar partidos</h2>
       
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Tournament</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Torneo</label>
           <select
             value={selectedTournamentId}
             onChange={(e) => setSelectedTournamentId(Number(e.target.value))}
             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Select Tournament</option>
+            <option value="">Torneo</option>
             {tournaments.map(tournament => (
               <option key={tournament.id} value={tournament.id}>
                 {tournament.name}
@@ -55,13 +55,13 @@ const PreMatchConfig: React.FC<PreMatchConfigProps> = ({ onStartMatch }) => {
         {selectedTournament && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Home Team</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Local</label>
               <select
                 value={homeTeam?.id || ''}
                 onChange={handleHomeTeamChange}
                 className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Select Home Team</option>
+                <option value="">Selecciona equipo local</option>
                 {availableTeams.map(team => (
                   <option key={team.id} value={team.id}>
                     {team.name}
@@ -71,13 +71,13 @@ const PreMatchConfig: React.FC<PreMatchConfigProps> = ({ onStartMatch }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Away Team</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Visitante</label>
               <select
                 value={awayTeam?.id || ''}
                 onChange={handleAwayTeamChange}
                 className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Select Away Team</option>
+                <option value="">Selecciona equipo visitante</option>
                 {availableTeams
                   .filter(team => team.id !== homeTeam?.id)
                   .map(team => (
@@ -93,7 +93,7 @@ const PreMatchConfig: React.FC<PreMatchConfigProps> = ({ onStartMatch }) => {
               disabled={!homeTeam || !awayTeam}
               className="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Start Match
+              Comenzar
             </button>
           </>
         )}

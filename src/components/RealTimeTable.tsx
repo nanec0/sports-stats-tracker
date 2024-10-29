@@ -13,7 +13,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
   awayTeam,
 }) => {
   const columns = [
-    { key: 'team', label: 'Team' },
+    { key: 'team', label: 'Equipo' },
     { key: 'chico', label: 'Chico' },
     { key: 'jugador', label: 'Jugador' },
     { key: 'tipoDeJuego', label: 'Tipo de juego' },
@@ -24,7 +24,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Real-Time Stats</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Estadísticas</h2>
         
         <div className="flex gap-4 mb-6">
           <div className="flex items-center">
@@ -64,7 +64,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
                     colSpan={columns.length}
                     className="px-6 py-8 text-center text-gray-500"
                   >
-                    No plays recorded yet
+                    No hay jugadas registradas
                   </td>
                 </tr>
               ) : (
@@ -106,7 +106,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      Zone {play.zona}
+                      Zona {play.zona}
                     </td>
                   </tr>
                 ))
