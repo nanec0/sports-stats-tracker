@@ -54,6 +54,16 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
     setMinutes('');
   };
 
+  const optionsTipoDeResultado = Object.entries(TipoDeResultado).map(([key, value]) => ({
+    value,
+    label: key.charAt(0).toUpperCase() + key.slice(1).toLowerCase(),
+  }));
+
+  const optionsTipoDeJuego = Object.entries(TipoDeJuego).map(([key, value]) => ({
+    value,
+    label: key.charAt(0).toUpperCase() + key.slice(1).toLowerCase(),
+  }));
+
   const formFields = [
     {
       id: 'chico',
@@ -91,10 +101,7 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
       type: 'select',
       value: tipoDeJuego,
       onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setTipoDeJuego(e.target.value as TipoDeJuego),
-      options: [
-        { value: 'abierto', label: 'Abierto' },
-        { value: 'parado', label: 'Parado' },
-      ],
+      options: optionsTipoDeJuego,
       required: true,
     },
     {
@@ -103,12 +110,7 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
       type: 'select',
       value: resultado,
       onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setResultado(e.target.value as TipoDeResultado),
-      options: [
-        { value: 'gol', label: 'Gol' },
-        { value: 'atajado', label: 'Atajado' },
-        { value: 'desviado', label: 'Desviado' },
-        { value: 'bloqueado', label: 'Bloqueado' },
-      ],
+      options: optionsTipoDeResultado,
       required: true,
     },
   ];
