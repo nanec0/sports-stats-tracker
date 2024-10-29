@@ -15,6 +15,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
   const columns = [
     { key: 'team', label: 'Equipo' },
     { key: 'chico', label: 'Chico' },
+    { key: 'minute', label: 'Minuto' },
     { key: 'jugador', label: 'Jugador' },
     { key: 'tipoDeJuego', label: 'Tipo de juego' },
     { key: 'resultado', label: 'Resultado' },
@@ -82,6 +83,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({
                       {play.teamId === homeTeam.id ? homeTeam.name : awayTeam.name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{play.chico}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{play.minutes}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{play.jugador}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

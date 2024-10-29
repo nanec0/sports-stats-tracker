@@ -36,7 +36,8 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
         jugador: jugador,
         tipoDeJuego: tipoDeJuego,
         resultado: resultado,
-        zona: selectedZone || ''
+        zona: selectedZone || '',
+        minutes: typeof minutes === 'number' ? minutes : 0,
       };
 
       addPlay(play);
@@ -65,21 +66,6 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
   }));
 
   const formFields = [
-    {
-      id: 'chico',
-      label: 'Chico',
-      type: 'select',
-      value: chico,
-      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setChico(e.target.value),
-      options: [
-        { value: '', label: 'Select Chico' },
-        { value: '1', label: '1' },
-        { value: '2', label: '2' },
-        { value: '3', label: '3' },
-        { value: '4', label: '4' },
-      ],
-      required: true,
-    },
     {
       id: 'jugador',
       label: 'Jugador',
@@ -111,6 +97,21 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
       value: resultado,
       onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setResultado(e.target.value as TipoDeResultado),
       options: optionsTipoDeResultado,
+      required: true,
+    },
+    {
+      id: 'chico',
+      label: 'Chico',
+      type: 'select',
+      value: chico,
+      onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setChico(e.target.value),
+      options: [
+        { value: '', label: 'Select Chico' },
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+        { value: '3', label: '3' },
+        { value: '4', label: '4' },
+      ],
       required: true,
     },
   ];
@@ -171,7 +172,7 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
 
         <div>
           <label htmlFor="minutes" className="block text-sm font-medium text-gray-700 mb-1">
-            Minute of the Game
+            Minuto del chico
           </label>
           <input
             type="number"

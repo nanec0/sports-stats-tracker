@@ -38,6 +38,7 @@ export interface Play {
   tipoDeJuego: TipoDeJuego;
   resultado: TipoDeResultado;
   zona: string;
+  minutes: number;
 }
 
 export enum TipoDeJuego {
