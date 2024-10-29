@@ -108,7 +108,7 @@ const App = () => {
           onClick={() => setActiveComponent("tournamentManagement")}
           className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 mr-2"
         >
-          Tournament Management
+          Gestión de Torneos
         </button>
         <button
           onClick={() => setActiveComponent("preMatchConfig")}
@@ -126,7 +126,7 @@ const App = () => {
           onClick={() => setActiveComponent("realTimeTable")}
           className="bg-purple-500 text-white p-2 rounded hover:bg-purple-600"
         >
-          Real-Time Table
+          Estadísticas
         </button>
       </div>
       <div className="grid grid-cols-1 gap-4">
