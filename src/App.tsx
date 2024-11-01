@@ -160,12 +160,12 @@ const App = () => {
       <div className="grid grid-cols-1 gap-4">
         {renderComponent}
       </div>
-      <div className="mt-4">
-      <h2 className="text-xl font-bold">Matches</h2>
-      <ul>
-        {matches.map(match => (
-          <li key={match.id}>{match.date}</li>
-        ))}
+      <div className="mt-4" style={{ display: 'none' }}>
+        <h2 className="text-xl font-bold">Matches</h2>
+        <ul>
+          {matches.map(match => (
+            <li key={match.id}>{match.date}</li>
+          ))}
       </ul>
     </div>
     </div>
