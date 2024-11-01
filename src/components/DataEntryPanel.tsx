@@ -31,6 +31,8 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
     e.preventDefault();
     if (selectedZone && activeTeam) {
       const play: Play = {
+        id: Date.now(),
+        matchId: 0, // This should be set when starting a match
         teamId: activeTeam.id,
         chico: chico,
         jugador: jugador,
@@ -38,6 +40,7 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
         resultado: resultado,
         zona: selectedZone || '',
         minutes: typeof minutes === 'number' ? minutes : 0,
+        timestamp: Date.now()
       };
 
       addPlay(play);
@@ -50,7 +53,6 @@ const DataEntryPanel: React.FC<DataEntryPanelProps> = ({
     setJugador('');
     setTipoDeJuego('abierto' as TipoDeJuego);
     setResultado('gol' as TipoDeResultado);
-    // setSelectedZone('');
     setShowWarning(false);
     setMinutes('');
   };

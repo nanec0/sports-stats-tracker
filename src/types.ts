@@ -32,6 +32,8 @@ export interface Match {
 }
 
 export interface Play {
+  id: number;
+  matchId: number;
   teamId: number;
   chico: string;
   jugador: string;
@@ -39,6 +41,7 @@ export interface Play {
   resultado: TipoDeResultado;
   zona: string;
   minutes: number;
+  timestamp: number;
 }
 
 export enum TipoDeJuego {

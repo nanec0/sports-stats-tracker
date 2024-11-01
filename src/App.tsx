@@ -6,6 +6,7 @@ import RealTimeTable from "./components/RealTimeTable";
 import TournamentManagement from "./components/TournamentManagement";
 import PreMatchConfig from './components/PreMatchConfig';
 import { Play, Team } from './types';
+import useLocalStorage from './hooks/useLocalStorage';
 
 const useWindowSize = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -24,11 +25,13 @@ const useWindowSize = () => {
 
 const App = () => {
   const [activeComponent, setActiveComponent] = useState("tournamentManagement");
-  const [plays, setPlays] = useState<Play[]>([]);
+  const [plays, setPlays] = useLocalStorage<Play[]>("plays", []);
   const [selectedZone, setSelectedZone] = useState<string | null>(null);
   const [activeTeam, setActiveTeam] = useState<Team | null>(null);
   const [homeTeam, setHomeTeam] = useState<Team | null>(null);
   const [awayTeam, setAwayTeam] = useState<Team | null>(null);
+  const [currentMatchId, setCurrentMatchId] = useLocalStorage<number>("currentMatchId", 0);
+  const [matches, setMatches] = useLocalStorage<{ id: number, date: string }[]>("matches", []);
 
   const isMobile = useWindowSize();
 
@@ -37,8 +40,8 @@ const App = () => {
   }, [homeTeam, awayTeam]);
 
   const addPlay = useCallback((play: Play) => {
-    setPlays((prevPlays) => [...prevPlays, play]);
-  }, []);
+    setPlays((prevPlays) => [...prevPlays, { ...play, matchId: currentMatchId }]);
+  }, [setPlays, currentMatchId]);
 
   const switchTeam = useCallback(() => {
     setActiveTeam((prevActiveTeam) => (prevActiveTeam === homeTeam ? awayTeam : homeTeam));
@@ -46,6 +49,9 @@ const App = () => {
   }, [homeTeam, awayTeam]);
 
   const handleMatchStart = (home: Team, away: Team) => {
+    const newMatchId = Date.now();
+    setCurrentMatchId(newMatchId);
+    setMatches(prev => [...prev, { id: newMatchId, date: new Date().toISOString() }]);
     setHomeTeam(home);
     setAwayTeam(away);
     setActiveTeam(home);
