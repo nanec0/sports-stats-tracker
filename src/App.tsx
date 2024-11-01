@@ -40,7 +40,13 @@ const App = () => {
   }, [homeTeam, awayTeam]);
 
   const addPlay = useCallback((play: Play) => {
-    setPlays((prevPlays) => [...prevPlays, { ...play, matchId: currentMatchId }]);
+    const newPlay = {
+      ...play,
+      id: Date.now(),
+      matchId: currentMatchId,
+      timestamp: Date.now()
+    };
+    setPlays((prevPlays) => [...prevPlays, newPlay]);
   }, [setPlays, currentMatchId]);
 
   const switchTeam = useCallback(() => {
@@ -57,6 +63,10 @@ const App = () => {
     setActiveTeam(home);
     setActiveComponent("dataEntryPanel");
   };
+
+  const matchPlays = useMemo(() => {
+    return plays.filter(play => play.matchId === currentMatchId);
+  }, [plays, currentMatchId]);
 
   const renderComponent = useMemo(() => {
     switch (activeComponent) {
@@ -85,7 +95,7 @@ const App = () => {
                 <RealTimeTable
                   homeTeam={homeTeam}
                   awayTeam={awayTeam}
-                  plays={plays}
+                  plays={matchPlays}
                 />
               )}
             </div>
@@ -104,7 +114,19 @@ const App = () => {
       default:
         return null;
     }
-  }, [activeComponent, handleMatchStart, addPlay, selectedZone, isMobile, activeTeam, switchTeam, plays, homeTeam, awayTeam]);
+  }, [
+    activeComponent,
+    handleMatchStart,
+    addPlay,
+    selectedZone,
+    isMobile,
+    activeTeam,
+    switchTeam,
+    plays,
+    matchPlays,
+    homeTeam,
+    awayTeam
+  ]);
 
   return (
     <div className="container mx-auto p-4">
@@ -138,6 +160,14 @@ const App = () => {
       <div className="grid grid-cols-1 gap-4">
         {renderComponent}
       </div>
+      <div className="mt-4">
+      <h2 className="text-xl font-bold">Matches</h2>
+      <ul>
+        {matches.map(match => (
+          <li key={match.id}>{match.date}</li>
+        ))}
+      </ul>
+    </div>
     </div>
   );
 };
