@@ -76,14 +76,14 @@ const App = () => {
         return <PreMatchConfig onStartMatch={handleMatchStart} />;
       case "dataEntryPanel":
         return (
-          <div className="flex flex-col md:flex-row h-screen">
-            <div className="w-full md:w-1/2 p-4">
+          <div className="flex flex-col lg:flex-row min-h-screen">
+            <div className="w-full lg:w-1/2 p-2 lg:p-4">
               <InteractiveMap
                 selectedZone={selectedZone}
                 setSelectedZone={setSelectedZone}
                 activeTeam={activeTeam === homeTeam ? 'home' : 'away'} />
             </div>
-            <div className="w-full md:w-1/2 p-4">
+            <div className="w-full lg:w-1/2 p-2 lg:p-4">
               <DataEntryPanel
                 addPlay={addPlay}
                 selectedZone={selectedZone}
@@ -92,11 +92,13 @@ const App = () => {
                 activeTeam={activeTeam}
                 onTeamSwitch={switchTeam} />
               {homeTeam && awayTeam && (
-                <RealTimeTable
-                  homeTeam={homeTeam}
-                  awayTeam={awayTeam}
-                  plays={matchPlays}
-                />
+                <div className="mt-4">
+                  <RealTimeTable
+                    homeTeam={homeTeam}
+                    awayTeam={awayTeam}
+                    plays={matchPlays}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -129,45 +131,37 @@ const App = () => {
   ]);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Play Data</h1>
-      <div className="mb-4">
-        <button
-          onClick={() => setActiveComponent("tournamentManagement")}
-          className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 mr-2"
-        >
-          Gestión de Torneos
-        </button>
-        <button
-          onClick={() => setActiveComponent("preMatchConfig")}
-          className="bg-blue-500 text-white p-2 rounded mr-2 hover:bg-blue-600"
-        >
-          Comenzar Partido
-        </button>
-        <button
-          onClick={() => setActiveComponent("dataEntryPanel")}
-          className="bg-green-500 text-white p-2 rounded mr-2 hover:bg-green-600"
-        >
-          Datos del Partido
-        </button>
-        <button
-          onClick={() => setActiveComponent("realTimeTable")}
-          className="bg-purple-500 text-white p-2 rounded hover:bg-purple-600"
-        >
-          Estadísticas
-        </button>
-      </div>
-      <div className="grid grid-cols-1 gap-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-2 py-4 lg:px-4 lg:py-6">
+        <h1 className="text-xl lg:text-2xl font-bold mb-4 text-center">Play Data</h1>
+        <div className="flex flex-wrap gap-2 mb-4 justify-center">
+          <button
+            onClick={() => setActiveComponent("tournamentManagement")}
+            className="bg-yellow-500 text-white px-3 py-1.5 rounded text-sm lg:text-base hover:bg-yellow-600"
+          >
+            Gestión de Torneos
+          </button>
+          <button
+            onClick={() => setActiveComponent("preMatchConfig")}
+            className="bg-blue-500 text-white px-3 py-1.5 rounded text-sm lg:text-base hover:bg-blue-600"
+          >
+            Comenzar Partido
+          </button>
+          <button
+            onClick={() => setActiveComponent("dataEntryPanel")}
+            className="bg-green-500 text-white px-3 py-1.5 rounded text-sm lg:text-base hover:bg-green-600"
+          >
+            Datos del Partido
+          </button>
+          <button
+            onClick={() => setActiveComponent("realTimeTable")}
+            className="bg-purple-500 text-white px-3 py-1.5 rounded text-sm lg:text-base hover:bg-purple-600"
+          >
+            Estadísticas
+          </button>
+        </div>
         {renderComponent}
       </div>
-      <div className="mt-4" style={{ display: 'none' }}>
-        <h2 className="text-xl font-bold">Matches</h2>
-        <ul>
-          {matches.map(match => (
-            <li key={match.id}>{match.date}</li>
-          ))}
-      </ul>
-    </div>
     </div>
   );
 };
