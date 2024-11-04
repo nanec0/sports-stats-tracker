@@ -4,8 +4,8 @@ import useLocalStorage from '../hooks/useLocalStorage';
 
 interface RealTimeTableProps {
   plays: Play[];
-  homeTeam: Team;
-  awayTeam: Team;
+  homeTeam?: Team;
+  awayTeam?: Team;
 }
 
 const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam }) => {
@@ -33,20 +33,36 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
   }, [plays]);
 
   const stats = useMemo(() => {
-    const teamStats = {
-      [homeTeam.id]: { goles: 0, tiros: 0 },
-      [awayTeam.id]: { goles: 0, tiros: 0 },
-    };
+    const teamStats: Record<number, { goles: number; tiros: number }> = {};
+    
+    // Initialize stats for all teams that appear in plays
+    plays.forEach(play => {
+      if (!teamStats[play.teamId]) {
+        teamStats[play.teamId] = { goles: 0, tiros: 0 };
+      }
+    });
 
     filteredPlays.forEach(play => {
-      teamStats[play.teamId].tiros++;
-      if (play.resultado === TipoDeResultado.Gol) {
-        teamStats[play.teamId].goles++;
+      if (teamStats[play.teamId]) {
+        teamStats[play.teamId].tiros++;
+        if (play.resultado === TipoDeResultado.Gol) {
+          teamStats[play.teamId].goles++;
+        }
       }
     });
 
     return teamStats;
-  }, [filteredPlays, homeTeam.id, awayTeam.id]);
+  }, [filteredPlays, plays]);
+
+  // Get unique teams from plays
+  const teamsInPlays = useMemo(() => {
+    const uniqueTeamIds = [...new Set(plays.map(play => play.teamId))];
+    return uniqueTeamIds.map(teamId => ({
+      id: teamId,
+      name: homeTeam?.id === teamId ? homeTeam.name : awayTeam?.id === teamId ? awayTeam.name : `Team ${teamId}`,
+      color: homeTeam?.id === teamId ? homeTeam.color : awayTeam?.id === teamId ? awayTeam.color : '#000000'
+    }));
+  }, [plays, homeTeam, awayTeam]);
 
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
@@ -65,7 +81,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
             <option value="all">All Matches</option>
             {matches.map(match => (
               <option key={match.id} value={match.id}>
-                {new Date(match.date).toLocaleDateString() + " " + homeTeam.name.substring(0,3).toUpperCase() + " vs " + awayTeam.name.substring(0,3).toUpperCase()}
+                {new Date(match.date).toLocaleDateString()}
               </option>
             ))}
           </select>
@@ -81,8 +97,9 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
             className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
           >
             <option value="all">All Teams</option>
-            <option value={homeTeam.id}>{homeTeam.name}</option>
-            <option value={awayTeam.id}>{awayTeam.name}</option>
+            {teamsInPlays.map(team => (
+              <option key={team.id} value={team.id}>{team.name}</option>
+            ))}
           </select>
         </div>
 
@@ -135,17 +152,14 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded">
-          <h3 className="font-bold" style={{ color: homeTeam.color }}>{homeTeam.name}</h3>
-          <p>Goals: {stats[homeTeam.id].goles}</p>
-          <p>Shots: {stats[homeTeam.id].tiros}</p>
-        </div>
-        <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded">
-          <h3 className="font-bold" style={{ color: awayTeam.color }}>{awayTeam.name}</h3>
-          <p>Goals: {stats[awayTeam.id].goles}</p>
-          <p>Shots: {stats[awayTeam.id].tiros}</p>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        {teamsInPlays.map(team => (
+          <div key={team.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded">
+            <h3 className="font-bold" style={{ color: team.color }}>{team.name}</h3>
+            <p>Goals: {stats[team.id]?.goles || 0}</p>
+            <p>Shots: {stats[team.id]?.tiros || 0}</p>
+          </div>
+        ))}
       </div>
 
       <div className="overflow-x-auto">
@@ -162,40 +176,41 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            {filteredPlays.map((play) => (
-              <tr key={play.id}>
-                <td
-                  className="px-6 py-4 whitespace-nowrap font-medium"
-                  style={{
-                    color: play.teamId === homeTeam.id ? homeTeam.color : awayTeam.color
-                  }}
-                >
-                  {play.teamId === homeTeam.id ? homeTeam.name : awayTeam.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.chico}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.minutes}'</td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.jugador}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    play.tipoDeJuego === TipoDeJuego.Abierto
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                      : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                  }`}>
-                    {play.tipoDeJuego}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    play.resultado === TipoDeResultado.Gol
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                      : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-                  }`}>
-                    {play.resultado}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.zona}</td>
-              </tr>
-            ))}
+            {filteredPlays.map((play) => {
+              const team = teamsInPlays.find(t => t.id === play.teamId);
+              return (
+                <tr key={play.id}>
+                  <td
+                    className="px-6 py-4 whitespace-nowrap font-medium"
+                    style={{ color: team?.color || '#000000' }}
+                  >
+                    {team?.name || `Team ${play.teamId}`}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.chico}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.minutes}'</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.jugador}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      play.tipoDeJuego === TipoDeJuego.Abierto
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                    }`}>
+                      {play.tipoDeJuego}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      play.resultado === TipoDeResultado.Gol
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                    }`}>
+                      {play.resultado}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.zona}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
