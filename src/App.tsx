@@ -145,6 +145,14 @@ const App = () => {
         )}
         {activeComponent === "matchHistory" && <MatchHistory />}
       </div>
+      <div className="mt-4" style={{ display: 'none' }}>
+        <h2 className="text-xl font-bold">Matches</h2>
+        <div>
+          {matches.map(match => (
+            <li key={match.id}>{match.date}</li>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
