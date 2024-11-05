@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Play, Team, Tournament } from '../types';
 import useLocalStorage from '../hooks/useLocalStorage';
 import RealTimeTable from './RealTimeTable';
@@ -7,6 +7,7 @@ const MatchHistory: React.FC = () => {
   const [matches] = useLocalStorage<{ id: number; date: string }[]>('matches', []);
   const [plays] = useLocalStorage<Play[]>('plays', []);
   const [tournaments] = useLocalStorage<Tournament[]>('tournaments', []);
+  const [selectedMatch, setSelectedMatch] = useState<number | 'all'>('all');
 
   // Get all teams from all tournaments with proper type checking
   const allTeams = useMemo(() => {
@@ -39,6 +40,10 @@ const MatchHistory: React.FC = () => {
     return plays.filter(play => play.matchId === matchId);
   };
 
+  const filteredMatches = useMemo(() => {
+    return selectedMatch === 'all' ? matches : matches.filter(match => match.id === selectedMatch);
+  }, [matches, selectedMatch]);
+
   if (matches.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -53,8 +58,28 @@ const MatchHistory: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-8 text-gray-800 dark:text-gray-200">Match History</h1>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Match
+        </label>
+        <select
+          value={selectedMatch}
+          onChange={(e) => setSelectedMatch(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+          className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+        >
+          <option value="all">All Matches</option>
+          {matches.map(match => {
+            const { homeTeam, awayTeam } = getTeamsForMatch(match.id);
+            return (
+              <option key={match.id} value={match.id}>
+                {new Date(match.date).toLocaleDateString() + " " + (homeTeam?.name || '') + " vs " + (awayTeam?.name || '')}
+              </option>
+            );
+          })}
+        </select>
+      </div>
       <div className="space-y-8">
-        {matches.map(match => {
+        {filteredMatches.map(match => {
           const { homeTeam, awayTeam } = getTeamsForMatch(match.id);
           const matchPlays = getMatchPlays(match.id);
 
