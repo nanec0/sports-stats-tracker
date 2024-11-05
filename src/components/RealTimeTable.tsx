@@ -48,6 +48,37 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
     return `${homeTeam?.name} vs ${awayTeam?.name}`;
   };
 
+  const convertToCSV = (data: Play[]) => {
+    const headers = ['Team', 'Chico', 'Minutes', 'Player', 'Action', 'Result', 'Zone'];
+    const rows = data.map(play => [
+      getTeamNames(),
+      play.chico,
+      play.minutes,
+      play.jugador,
+      play.tipoDeJuego,
+      play.resultado,
+      play.zona
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    return csvContent;
+  };
+
+  const downloadCSV = () => {
+    const csvContent = convertToCSV(filteredPlays);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', 'plays.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
       <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Real-Time Table</h2>
@@ -180,6 +211,15 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-4">
+        <button
+          onClick={downloadCSV}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+        >
+          Export to CSV
+        </button>
       </div>
     </div>
   );
