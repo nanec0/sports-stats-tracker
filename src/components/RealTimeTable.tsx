@@ -44,14 +44,16 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
     return teamStats;
   }, [filteredPlays, homeTeam?.id, awayTeam?.id]);
 
-  const getTeamNames = () => {
+  const getTeamNames = (play: Play | undefined) => {
+    if (play)
+      return `${play.teamId === homeTeam?.id ? homeTeam?.name : awayTeam?.name}`;
     return `${homeTeam?.name} vs ${awayTeam?.name}`;
   };
 
   const convertToCSV = (data: Play[]) => {
     const headers = ['Team', 'Chico', 'Minutes', 'Player', 'Action', 'Result', 'Zone'];
     const rows = data.map(play => [
-      getTeamNames(),
+      getTeamNames(play),
       play.chico,
       play.minutes,
       play.jugador,
@@ -183,7 +185,7 @@ const RealTimeTable: React.FC<RealTimeTableProps> = ({ plays, homeTeam, awayTeam
                     color: play.teamId === homeTeam?.id ? homeTeam?.color : awayTeam?.color
                   }}
                 >
-                  {getTeamNames()}
+                  {getTeamNames(play)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.chico}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-200">{play.minutes}'</td>
